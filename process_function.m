@@ -13,12 +13,14 @@
 %t_1=0.75;
 %t_2=3;
 
+% 9/24/16 - Added signalout_dff (R_0) output (i.e. deltaF/F prior to EWMA filtering); JEC Corrected an error (replaced F_sm with signalin)
 
-function signalout=process_function(signalin,t_0,t_1,t_2)
+
+function [signalout_dff,signalout_ewma]=process_function_jc(signalin,t_0,t_1,t_2,samplingfreq)
 
 F_0=[];
 
-Fs=30; %sampling frequency
+Fs=samplingfreq; %sampling frequency
 
 t_0_s=floor(t_0*Fs);
 t_1_s=floor(t_1*Fs);
@@ -30,14 +32,13 @@ for i=(t_2_s+1):length(signalin)
     F_0=[F_0 min(F_sm(i-t_2_s:i))];
 end
 
-R_0=(F_sm((t_2_s+1):end)-F_0')./F_0';
+start = 1+length(signalin)-length(F_0);
+
+R_0 = (signalin((t_2_s+1):end)-F_0)./F_0;
 
 R_0_sm = EWMA(R_0,t_0_s);
 
-
-signalout=R_0_sm;
-%plot((1:length(R_0_sm))/30,RawIntDen1((t_2_s+1):end))
-%hold on
-%plot((1:length(R_0_sm))/30,R_0_sm,'r')
+signalout_dff = R_0;
+signalout_ewma = R_0_sm;
 
 
