@@ -1,5 +1,5 @@
 # matlab-stuff
-collection of scripts and functions used by the lab
+Collection of scripts and functions used by the lab
 
 ##### MATLAB functions from Petros for smoothing GCaMP signals
 EWMA.m
